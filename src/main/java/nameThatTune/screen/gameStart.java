@@ -132,7 +132,7 @@ public class gameStart {
 //			catobject = selectedCats.get(category);
 //		}
 		
-		//saveUsedDowFile(list4Game);
+		saveUsedDowFile(finalSelection);
 		return finalSelection;
 	}
 	
