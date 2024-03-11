@@ -25,6 +25,7 @@ import javafx.scene.media.MediaPlayer.Status;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import nameThatTune.model.GamePads;
 import nameThatTune.model.Group;
 import nameThatTune.model.Player;
@@ -122,6 +123,8 @@ public class Question {
 			if (music.isFile()) {
 		    	Media gameMusic = new Media(music.toURI().toString()); 
 		        mediaPlayer = new MediaPlayer(gameMusic);
+		        mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+		        mediaPlayer.seek(Duration.ZERO);
 			}
 			else {
 				System.out.println("Song doesn't exist. SONG: "+cat+"/"+song+".mp3");
@@ -219,4 +222,3 @@ public class Question {
 	}
 	
 }
-
