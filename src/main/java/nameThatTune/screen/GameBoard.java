@@ -95,7 +95,6 @@ public class GameBoard {
 		currentPlayerDisp.setFill(Color.WHITE);
 		StackPane.setAlignment(currentPlayerDisp, Pos.BOTTOM_LEFT);
 		StackPane.setMargin(currentPlayerDisp, new Insets(0,0,stageH/16,0));
-		buzzers.setType("main");
 		waitForInput(stage,scene,sp,players,buzzers,songsGame,currentPlayerObj,used);
 	}
 	
