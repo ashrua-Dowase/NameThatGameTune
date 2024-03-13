@@ -2,6 +2,7 @@ package nameThatTune.model;
 
 import java.io.File;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 
 import javafx.scene.image.ImageView;
@@ -9,6 +10,7 @@ import javafx.scene.media.AudioClip;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaPlayer.Status;
+import javafx.util.Duration;
 import net.java.games.input.Component;
 import net.java.games.input.Controller;
 import net.java.games.input.ControllerEnvironment;
@@ -72,7 +74,18 @@ public class GamePads extends Thread{
 			this.setBuzzed(false);
 			this.setPlayerBuzzed(new Player("",5));
 			this.setSongToPlay(music);
-			this.getSongToPlay().play();
+			this.getSongToPlay().setOnReady(new Runnable() {
+			    @Override
+			    public void run() {
+			        Random r = new Random((long) Math.random());
+			        Double songLength = getSongToPlay().getMedia().getDuration().toSeconds();
+			        Double halfWay = songLength / 2;
+			        Double seekPoint = r.nextDouble(halfWay);
+			        getSongToPlay().setCycleCount(MediaPlayer.INDEFINITE);
+			    	getSongToPlay().seek(Duration.seconds(seekPoint));
+			    	getSongToPlay().play();
+			    }
+			});
 			this.selected = selected;
 		}
 	}
@@ -230,7 +243,6 @@ public class GamePads extends Thread{
 			}
 		}
 		else if (this.getType().equals("game") && !this.getDone()){
-			this.getSongToPlay().play();
 			while (!this.getDone()) {
 				if(!this.getBuzzed()) {
 					for (int j = 0; j < controllers.length; j++) {
@@ -307,7 +319,6 @@ public class GamePads extends Thread{
 		}
 		else if (this.type.equals("setup") && !this.getDone())
 		{
-			int choice;
 			while (!this.getDone()) {
 				for (int j = 0; j < controllers.length; j++) {
 					if (controllers[j].getName().equals("Buzz")){

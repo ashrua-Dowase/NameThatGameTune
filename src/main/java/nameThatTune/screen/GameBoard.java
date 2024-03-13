@@ -83,26 +83,26 @@ public class GameBoard {
 				Question.drawScores(stage,scene,player[i],sp,i);
 			}
 		}
-			
-		
-		Double stageH = stage.getHeight();
-		Double stageW = stage.getWidth();
-		for (int i=3;i>=0;i--) {
-			String catName = sliter.next(); 
-			drawcategory(sp,catName,i,stageH,stageW,used);
+		else {	
+			Double stageH = stage.getHeight();
+			Double stageW = stage.getWidth();
+			for (int i=3;i>=0;i--) {
+				String catName = sliter.next(); 
+				drawcategory(sp,catName,i,stageH,stageW,used);
+			}
+			///////////////Start new thread for buzzers////////
+			Text currentPlayerDisp = new Text(currentPlayerObj.getPlayerName());
+			sp.getChildren().add(currentPlayerDisp);
+			FadeTransition cpdft = new FadeTransition(Duration.millis(3000), currentPlayerDisp);
+			cpdft.setFromValue(0.0);
+			cpdft.setToValue(1.0);
+			cpdft.play();
+			currentPlayerDisp.setStyle("-fx-font: normal 16px 'Arial' ");
+			currentPlayerDisp.setFill(Color.WHITE);
+			StackPane.setAlignment(currentPlayerDisp, Pos.BOTTOM_LEFT);
+			StackPane.setMargin(currentPlayerDisp, new Insets(0,0,stageH/16,0));
+			waitForInput(stage,scene,sp,players,buzzers,songsGame,currentPlayerObj,used);
 		}
-		///////////////Start new thread for buzzers////////
-		Text currentPlayerDisp = new Text(currentPlayerObj.getPlayerName());
-		sp.getChildren().add(currentPlayerDisp);
-        FadeTransition cpdft = new FadeTransition(Duration.millis(3000), currentPlayerDisp);
-        cpdft.setFromValue(0.0);
-        cpdft.setToValue(1.0);
-        cpdft.play();
-		currentPlayerDisp.setStyle("-fx-font: normal 16px 'Arial' ");
-		currentPlayerDisp.setFill(Color.WHITE);
-		StackPane.setAlignment(currentPlayerDisp, Pos.BOTTOM_LEFT);
-		StackPane.setMargin(currentPlayerDisp, new Insets(0,0,stageH/16,0));
-		waitForInput(stage,scene,sp,players,buzzers,songsGame,currentPlayerObj,used);
 	}
 	
 	public static void drawcategory(StackPane sp,String catName,int place,Double h,Double w,Map<String,Integer> used) throws Exception {

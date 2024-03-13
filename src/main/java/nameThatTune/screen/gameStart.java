@@ -191,22 +191,11 @@ public class gameStart {
 	public static Map<String,String> getSongs(Map<String,Map<String,String>> sl,Map<String,String> cat,String category) {
 		Map<String,String> csl = sl.get(category);
 		Map<String,String> finalCat = new HashMap<>();
-		Set<String> key;
-		Random randomize;
-		Object[] cslArray;
-		String songc;
-		int max;
-		int randomInt;
+		List<String> cslKeys = new ArrayList<String>(csl.keySet());
+		Collections.shuffle(cslKeys);
 		int numberOfSongs = Constants.numberOfSongs;
-		randomize = new Random();
-		for (int i = 0;i<numberOfSongs;i++) {
-			key = csl.keySet();
-			cslArray = key.toArray();
-			max = key.size();
-			randomInt = randomize.nextInt(max);
-			songc = cslArray[randomInt].toString();
-			finalCat.put(songc,csl.get(songc));
-			csl.remove(songc);
+		for(int i=0;i<numberOfSongs;i++) {
+			finalCat.put(cslKeys.get(i),csl.get(cslKeys.get(i)));
 		}
 		return finalCat;
 	}
@@ -326,6 +315,10 @@ public class gameStart {
 		sp.getChildren().add(categoryDisp);
 		categoryDisp.setStyle("-fx-font: normal 16px 'Arial' ");
 		categoryDisp.setFill(Color.WHITE);
+        FadeTransition ftText = new FadeTransition(Duration.millis(3000), categoryDisp);
+        ftText.setFromValue(0.0);
+        ftText.setToValue(1.0);
+        ftText.play();
         FadeTransition ft = new FadeTransition(Duration.millis(3000), catIV);
         ft.setFromValue(0.0);
         ft.setToValue(1.0);

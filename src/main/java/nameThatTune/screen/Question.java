@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Queue;
+import java.util.Random;
 import java.util.Set;
 
 import javafx.animation.FadeTransition;
@@ -60,7 +61,7 @@ public class Question {
 		String songPlaying = mapCatSongs.remove(thisSong);
 		songsGame.replace(thisCategoryString,mapCatSongs);
 		
-		MediaPlayer songToPlay  = playSong(thisCategoryString,thisSong);
+		MediaPlayer songToPlay  = getSong(thisCategoryString,thisSong);
 		//Draw Board
 		sp.getChildren().clear();
 		questionNumber(sp,stage,thisSong,1);
@@ -116,7 +117,7 @@ public class Question {
 		return buzzedIV;
 	}
 	
-	public static MediaPlayer playSong(String cat,String song) {
+	public static MediaPlayer getSong(String cat,String song) {
 		MediaPlayer mediaPlayer = null;
 		try {
 			if (Integer.parseInt(song) < 10) {
@@ -124,10 +125,8 @@ public class Question {
 			}
 			File music = new File ("categories/"+cat+"/"+song+".mp3");
 			if (music.isFile()) {
-		    	Media gameMusic = new Media(music.toURI().toString()); 
+		    	Media gameMusic = new Media(music.toURI().toString());
 		        mediaPlayer = new MediaPlayer(gameMusic);
-		        mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
-		        mediaPlayer.seek(Duration.ZERO);
 			}
 			else {
 				System.out.println("Song doesn't exist. SONG: "+cat+"/"+song+".mp3");
