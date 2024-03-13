@@ -59,7 +59,13 @@ public class gameStart {
 		player4.setPlayerName(setName(player4,stage));
 		Group gameGroup = new Group(player1,player2,player3,player4);
 		Map<String,Map<String,String>> songlist = loadSongs();
-		displayBoard(stage, currentScene,sp,gameGroup,songlist,gsm);
+		if (songlist.size() >= 16) {
+			displayBoard(stage, currentScene,sp,gameGroup,songlist,gsm);
+		}
+		else {
+			System.out.println("Not enough songs.");
+			javafx.application.Platform.exit();
+		}
 	}
 	
 	public static Map<String, Map<String,String>> loadSongs() throws Exception {
@@ -80,9 +86,11 @@ public class gameStart {
 		Map<String,Map<String,String>> songList = processINIsongfile(iniConfiguration);
 		if (!used.isEmpty()) {
 			Map<String,Map<String,String>> newSongList = removeUsedSongs(songList,used);
-			return newSongList;
+			Map<String,Map<String,String>> usableSongList = removeUnusableSongs(newSongList);
+			return usableSongList;
 		}
-		return songList;
+		Map<String,Map<String,String>> usableSongList = removeUnusableSongs(songList);
+		return usableSongList;
 		
 	}
 	public static Map<String,Map<String,String>> processINIsongfile(INIConfiguration iniConfiguration){
@@ -101,36 +109,55 @@ public class gameStart {
 		return sl;
 	}
 	public static Map<String,Map<String,String>> removeUsedSongs(Map<String,Map<String,String>> sl,Properties used){
-		Map<String, Map<String, String>> newSongList = sl;
-		for (Map.Entry<String,Map<String,String>> category: newSongList.entrySet()) {
+		Map<String, Map<String, String>> newSongList = new HashMap<>();
+		for (Map.Entry<String,Map<String,String>> category: sl.entrySet()) {
+			Map<String,String> updatedCategoryValue = new HashMap<>();
 			for (Map.Entry<String,String> song : category.getValue().entrySet()) {
-				if (used.containsKey(category.getKey().toLowerCase()+"."+song.getKey())) {
-					newSongList.remove(category.getKey(), song.getKey());
+				if (!used.containsKey(category.getKey().toLowerCase()+"."+song.getKey())) {
+					updatedCategoryValue.put(song.getKey(), song.getValue());
 				}
+			}
+			if(updatedCategoryValue.size()>=4) {
+				newSongList.put(category.getKey(), updatedCategoryValue);
 			}
 		}
 		return newSongList;
 	}
 	
+	public static Map<String,Map<String,String>> removeUnusableSongs(Map<String,Map<String,String>> sl){
+		Map<String,Map<String,String>> usableSongList = new HashMap<>();
+		for (Map.Entry<String,Map<String,String>> category: sl.entrySet()) {
+			Map<String,String> updatedCategoryValue = new HashMap<>();
+			for (Map.Entry<String,String> song : category.getValue().entrySet()) {
+				if (Integer.parseInt(song.getKey()) < 10) {
+					String songStr = "0"+song.getKey();
+					File f = new File("categories/"+category.getKey()+"/"+songStr+".mp3");
+					if (f.exists()) {
+						updatedCategoryValue.put(song.getKey(), song.getValue());
+					}
+				}
+				else {
+					File f = new File("categories/"+category.getKey()+"/"+song.getKey()+".mp3");
+					if (f.exists()) {
+						updatedCategoryValue.put(song.getKey(), song.getValue());
+					}
+				}
+			}
+			if(updatedCategoryValue.size()>=4) {
+				usableSongList.put(category.getKey(), updatedCategoryValue);
+			}
+		}
+		return usableSongList;
+	}	
+	
 	
 	public static Map<String,Map<String,String>> pick4Game(Map<String,Map<String,String>> selectedCats){
-//		HashMap<String,Map<String,String>> list4Game = new HashMap<String,Map<String,String>>();
-//		Set<String> slcat;
-//		Object[] slcatArray;
-//		String category;
-//		Map<String,String> catobject;
 		Map<String,String> csl;
 		HashMap<String,Map<String,String>> finalSelection = new HashMap<String,Map<String,String>>();
 		for (Map.Entry<String,Map<String,String>> category : selectedCats.entrySet()) {
 			csl = getSongs(selectedCats,category.getValue(),category.getKey());
 			finalSelection.put(category.getKey(),csl);
 		}
-//		for (int i=1;i<=4;i++) {
-//			slcat = selectedCats.keySet();
-//			slcatArray = slcat.toArray();
-//			category = slcatArray.toString();
-//			catobject = selectedCats.get(category);
-//		}
 		
 		saveUsedDowFile(finalSelection);
 		return finalSelection;
@@ -260,10 +287,10 @@ public class gameStart {
 		sp.getChildren().add(categoryDisp);
 		categoryDisp.setStyle("-fx-font: normal 16px 'Arial' ");
 		categoryDisp.setFill(Color.WHITE);
-        /*FadeTransition ft = new FadeTransition(Duration.millis(3000), catIV);
+        FadeTransition ft = new FadeTransition(Duration.millis(3000), catIV);
         ft.setFromValue(0.0);
         ft.setToValue(1.0);
-        ft.play();*/
+        ft.play();
         StackPane.setMargin(catIV, new Insets((h/5)*(number+1),0,0,(w/4)*place));
         StackPane.setMargin(categoryDisp, new Insets((h/5)*(number+1)+50,0,0,((w/4)*place)+100));
 		StackPane.setAlignment(catIV,Pos.TOP_LEFT);
@@ -299,10 +326,10 @@ public class gameStart {
 		sp.getChildren().add(categoryDisp);
 		categoryDisp.setStyle("-fx-font: normal 16px 'Arial' ");
 		categoryDisp.setFill(Color.WHITE);
-        /*FadeTransition ft = new FadeTransition(Duration.millis(3000), catIV);
+        FadeTransition ft = new FadeTransition(Duration.millis(3000), catIV);
         ft.setFromValue(0.0);
         ft.setToValue(1.0);
-        ft.play();*/
+        ft.play();
         StackPane.setMargin(catIV, new Insets((h/5)*(number+1),0,0,(w/4)*place));
         StackPane.setMargin(categoryDisp, new Insets((h/5)*(number+1)+50,0,0,((w/4)*place)+100));
 		StackPane.setAlignment(catIV,Pos.TOP_LEFT);
@@ -315,6 +342,8 @@ public class gameStart {
     	File path = new File (nameThatTune.Constants.folderLocation+"/music/competition.mp3");
     	Media gameSetupMusic = new Media(path.toURI().toString()); 
         MediaPlayer mediaPlayer = new MediaPlayer(gameSetupMusic);
+        mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+        mediaPlayer.seek(Duration.ZERO);
         mediaPlayer.play();
         return mediaPlayer;
 	}

@@ -8,6 +8,7 @@ import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Set;
 
+import javafx.animation.FadeTransition;
 import javafx.animation.Timeline;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -62,6 +63,8 @@ public class Question {
 		MediaPlayer songToPlay  = playSong(thisCategoryString,thisSong);
 		//Draw Board
 		sp.getChildren().clear();
+		questionNumber(sp,stage,thisSong,1);
+		questionNumber(sp,stage,thisCategoryString,0);
 		Label[] scores = new Label[4];
 		ImageView[] selected = new ImageView[4];
 		for(i=0;i<4;i++) {
@@ -203,9 +206,6 @@ public class Question {
     					}
             		}
             	}
-            	else if(event.getCode().toString().equals("R")) {
-            		reset(sp,songToPlay,selected,buzzers,players);
-            	}
             	else if (event.getCode().toString().equals("A")) {
             		answer.setOpacity(100);
             		buzzers.setDone(true);
@@ -215,10 +215,22 @@ public class Question {
 		scene.addEventHandler(KeyEvent.KEY_PRESSED, eh);
 	}
 	
-	public static void reset(StackPane sp,MediaPlayer songToPlay,ImageView[] selected,GamePads buzzers,Group players) {
-		//buzzers.
-		/*GamePads Qbuzzers = new GamePads("game",players,songToPlay,selected);
-		Qbuzzers.setDaemon(true);*/
-	}
+    public static void questionNumber(StackPane sp, Stage stage,String question,int select) throws Exception {
+    	if (select == 1) {
+        	Label questionNumber = new Label(question);
+        	questionNumber.setTextFill(Color.WHITE);
+        	questionNumber.setStyle("-fx-font: normal 64px 'Arial' ");
+        	sp.getChildren().add(questionNumber);
+        	StackPane.setAlignment(questionNumber, Pos.BOTTOM_RIGHT);
+    	}
+    	else {
+        	Label categoryLabel = new Label(question);
+        	categoryLabel.setTextFill(Color.WHITE);
+        	categoryLabel.setStyle("-fx-font: normal 64px 'Arial' ");
+        	sp.getChildren().add(categoryLabel);
+        	StackPane.setAlignment(categoryLabel, Pos.BOTTOM_LEFT);
+    	}
+    }
 	
 }
+

@@ -67,6 +67,8 @@ public class dowaseSplash extends Application {
         	if (path.isFile()) {
             	Media titleScreenMusic = new Media(path.toURI().toString()); 
                 mediaPlayer = new MediaPlayer(titleScreenMusic);
+		        mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+		        mediaPlayer.seek(Duration.ZERO);
                 mediaPlayer.play();	
         	}
         	else {

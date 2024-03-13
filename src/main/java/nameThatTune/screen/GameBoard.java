@@ -77,6 +77,13 @@ public class GameBoard {
 		player[3] = players.getFourth();
 		Set<String> songList = songsGame.keySet();
 		Iterator<String> sliter = songList.iterator();
+		if (isBoardCleared(songsGame,used)) {
+			sp.getChildren().clear();
+			for(int i=0;i<4;i++) {
+				Question.drawScores(stage,scene,player[i],sp,i);
+			}
+		}
+			
 		
 		Double stageH = stage.getHeight();
 		Double stageW = stage.getWidth();
@@ -117,6 +124,21 @@ public class GameBoard {
 			drawQuestion(sp,catImage,i,place,h,w);
 		}
 		category.close();
+	}
+	
+	public static boolean isBoardCleared(Map<String, Map<String,String>> songsGame,Map<String,Integer> used) {
+		int check = 0;
+		for (Map.Entry<String,Map<String,String>> category: songsGame.entrySet()) {
+			if(used.containsKey(category.getKey())) {
+				if (used.get(category.getKey()) == 4) {
+					check++;
+				}
+			}
+		}
+		if (check >= 4) {
+			return true;
+		}
+		return false;
 	}
 	
 	public static void drawQuestion(StackPane sp,Image catImage,int number,int place,Double h,Double w) {
