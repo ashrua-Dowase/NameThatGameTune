@@ -151,7 +151,7 @@ public class Question {
                     		selectedPlayerImage = selected[buzzers.getPlayerBuzzed().getPosition()-1];
                     		selectedPlayerImage.setOpacity(0);
                 			buzzers.setBuzzed(false);
-                			//buzzers.getPlayerBuzzed().sethasBuzzed(false);
+                			buzzers.setPlayerBuzzed(new Player("Player 5",5));
                 			if (!buzzers.getSongToPlay().getStatus().equals(Status.PLAYING)) {
                 				buzzers.getSongToPlay().play();
                 			}
