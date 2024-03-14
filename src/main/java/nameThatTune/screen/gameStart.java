@@ -131,13 +131,13 @@ public class gameStart {
 			for (Map.Entry<String,String> song : category.getValue().entrySet()) {
 				if (Integer.parseInt(song.getKey()) < 10) {
 					String songStr = "0"+song.getKey();
-					File f = new File("categories/"+category.getKey()+"/"+songStr+".mp3");
+					File f = new File(nameThatTune.Constants.folderLocation+"/categories/"+category.getKey()+"/"+songStr+".mp3");
 					if (f.exists()) {
 						updatedCategoryValue.put(song.getKey(), song.getValue());
 					}
 				}
 				else {
-					File f = new File("categories/"+category.getKey()+"/"+song.getKey()+".mp3");
+					File f = new File(nameThatTune.Constants.folderLocation+"/categories/"+category.getKey()+"/"+song.getKey()+".mp3");
 					if (f.exists()) {
 						updatedCategoryValue.put(song.getKey(), song.getValue());
 					}

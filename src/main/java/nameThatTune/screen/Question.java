@@ -123,7 +123,7 @@ public class Question {
 			if (Integer.parseInt(song) < 10) {
 				song = "0"+song;
 			}
-			File music = new File ("categories/"+cat+"/"+song+".mp3");
+			File music = new File (nameThatTune.Constants.folderLocation+"/categories/"+cat+"/"+song+".mp3");
 			if (music.isFile()) {
 		    	Media gameMusic = new Media(music.toURI().toString());
 		        mediaPlayer = new MediaPlayer(gameMusic);
