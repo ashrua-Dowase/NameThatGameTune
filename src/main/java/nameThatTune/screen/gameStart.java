@@ -276,10 +276,6 @@ public class gameStart {
 		sp.getChildren().add(categoryDisp);
 		categoryDisp.setStyle("-fx-font: normal 16px 'Arial' ");
 		categoryDisp.setFill(Color.WHITE);
-        FadeTransition ft = new FadeTransition(Duration.millis(3000), catIV);
-        ft.setFromValue(0.0);
-        ft.setToValue(1.0);
-        ft.play();
         StackPane.setMargin(catIV, new Insets((h/5)*(number+1),0,0,(w/4)*place));
         StackPane.setMargin(categoryDisp, new Insets((h/5)*(number+1)+50,0,0,((w/4)*place)+100));
 		StackPane.setAlignment(catIV,Pos.TOP_LEFT);
