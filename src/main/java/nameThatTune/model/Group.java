@@ -2,6 +2,7 @@ package nameThatTune.model;
 
 public class Group {
 	Player first,second,third,fourth;
+	boolean allSelected = false;
 	public Group(Player one, Player two, Player three, Player four){
 		first = one;
 		second = two;
@@ -31,5 +32,26 @@ public class Group {
 	}
 	public void setFourth(Player fourth) {
 		this.fourth = fourth;
+	}
+	public synchronized boolean getAllSelected() {
+		return allSelected;
+	}
+	public synchronized void setAllSelected(Boolean allselected) {
+		this.allSelected = allselected;
+	}
+	public synchronized Player getPlayer(int i) {
+		if (first.getPosition() == i) {
+			return first;
+		}
+		else if(second.getPosition() == i){
+			return second;
+		}
+		else if (third.getPosition() == i) {
+			return third;
+		}
+		else if (fourth.getPosition() == i) {
+			return fourth;
+		}
+	return first;
 	}
 }

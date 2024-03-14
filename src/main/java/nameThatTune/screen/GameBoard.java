@@ -77,26 +77,32 @@ public class GameBoard {
 		player[3] = players.getFourth();
 		Set<String> songList = songsGame.keySet();
 		Iterator<String> sliter = songList.iterator();
-		
-		Double stageH = stage.getHeight();
-		Double stageW = stage.getWidth();
-		for (int i=3;i>=0;i--) {
-			String catName = sliter.next(); 
-			drawcategory(sp,catName,i,stageH,stageW,used);
+		if (isBoardCleared(songsGame,used)) {
+			sp.getChildren().clear();
+			for(int i=0;i<4;i++) {
+				Question.drawScores(stage,scene,player[i],sp,i);
+			}
 		}
-		///////////////Start new thread for buzzers////////
-		Text currentPlayerDisp = new Text(currentPlayerObj.getPlayerName());
-		sp.getChildren().add(currentPlayerDisp);
-        FadeTransition cpdft = new FadeTransition(Duration.millis(3000), currentPlayerDisp);
-        cpdft.setFromValue(0.0);
-        cpdft.setToValue(1.0);
-        cpdft.play();
-		currentPlayerDisp.setStyle("-fx-font: normal 16px 'Arial' ");
-		currentPlayerDisp.setFill(Color.WHITE);
-		StackPane.setAlignment(currentPlayerDisp, Pos.BOTTOM_LEFT);
-		StackPane.setMargin(currentPlayerDisp, new Insets(0,0,stageH/16,0));
-		buzzers.setType("main");
-		waitForInput(stage,scene,sp,players,buzzers,songsGame,currentPlayerObj,used);
+		else {	
+			Double stageH = stage.getHeight();
+			Double stageW = stage.getWidth();
+			for (int i=3;i>=0;i--) {
+				String catName = sliter.next(); 
+				drawcategory(sp,catName,i,stageH,stageW,used);
+			}
+			///////////////Start new thread for buzzers////////
+			Text currentPlayerDisp = new Text(currentPlayerObj.getPlayerName());
+			sp.getChildren().add(currentPlayerDisp);
+			FadeTransition cpdft = new FadeTransition(Duration.millis(3000), currentPlayerDisp);
+			cpdft.setFromValue(0.0);
+			cpdft.setToValue(1.0);
+			cpdft.play();
+			currentPlayerDisp.setStyle("-fx-font: normal 16px 'Arial' ");
+			currentPlayerDisp.setFill(Color.WHITE);
+			StackPane.setAlignment(currentPlayerDisp, Pos.BOTTOM_LEFT);
+			StackPane.setMargin(currentPlayerDisp, new Insets(0,0,stageH/16,0));
+			waitForInput(stage,scene,sp,players,buzzers,songsGame,currentPlayerObj,used);
+		}
 	}
 	
 	public static void drawcategory(StackPane sp,String catName,int place,Double h,Double w,Map<String,Integer> used) throws Exception {
@@ -118,6 +124,21 @@ public class GameBoard {
 			drawQuestion(sp,catImage,i,place,h,w);
 		}
 		category.close();
+	}
+	
+	public static boolean isBoardCleared(Map<String, Map<String,String>> songsGame,Map<String,Integer> used) {
+		int check = 0;
+		for (Map.Entry<String,Map<String,String>> category: songsGame.entrySet()) {
+			if(used.containsKey(category.getKey())) {
+				if (used.get(category.getKey()) == 4) {
+					check++;
+				}
+			}
+		}
+		if (check >= 4) {
+			return true;
+		}
+		return false;
 	}
 	
 	public static void drawQuestion(StackPane sp,Image catImage,int number,int place,Double h,Double w) {

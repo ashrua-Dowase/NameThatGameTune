@@ -6,8 +6,10 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Queue;
+import java.util.Random;
 import java.util.Set;
 
+import javafx.animation.FadeTransition;
 import javafx.animation.Timeline;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -25,6 +27,7 @@ import javafx.scene.media.MediaPlayer.Status;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import nameThatTune.model.GamePads;
 import nameThatTune.model.Group;
 import nameThatTune.model.Player;
@@ -58,9 +61,11 @@ public class Question {
 		String songPlaying = mapCatSongs.remove(thisSong);
 		songsGame.replace(thisCategoryString,mapCatSongs);
 		
-		MediaPlayer songToPlay  = playSong(thisCategoryString,thisSong);
+		MediaPlayer songToPlay  = getSong(thisCategoryString,thisSong);
 		//Draw Board
 		sp.getChildren().clear();
+		questionNumber(sp,stage,thisSong,1);
+		questionNumber(sp,stage,thisCategoryString,0);
 		Label[] scores = new Label[4];
 		ImageView[] selected = new ImageView[4];
 		for(i=0;i<4;i++) {
@@ -112,15 +117,15 @@ public class Question {
 		return buzzedIV;
 	}
 	
-	public static MediaPlayer playSong(String cat,String song) {
+	public static MediaPlayer getSong(String cat,String song) {
 		MediaPlayer mediaPlayer = null;
 		try {
 			if (Integer.parseInt(song) < 10) {
 				song = "0"+song;
 			}
-			File music = new File ("categories/"+cat+"/"+song+".mp3");
+			File music = new File (nameThatTune.Constants.folderLocation+"/categories/"+cat+"/"+song+".mp3");
 			if (music.isFile()) {
-		    	Media gameMusic = new Media(music.toURI().toString()); 
+		    	Media gameMusic = new Media(music.toURI().toString());
 		        mediaPlayer = new MediaPlayer(gameMusic);
 			}
 			else {
@@ -200,9 +205,6 @@ public class Question {
     					}
             		}
             	}
-            	else if(event.getCode().toString().equals("R")) {
-            		reset(sp,songToPlay,selected,buzzers,players);
-            	}
             	else if (event.getCode().toString().equals("A")) {
             		answer.setOpacity(100);
             		buzzers.setDone(true);
@@ -212,11 +214,22 @@ public class Question {
 		scene.addEventHandler(KeyEvent.KEY_PRESSED, eh);
 	}
 	
-	public static void reset(StackPane sp,MediaPlayer songToPlay,ImageView[] selected,GamePads buzzers,Group players) {
-		//buzzers.
-		/*GamePads Qbuzzers = new GamePads("game",players,songToPlay,selected);
-		Qbuzzers.setDaemon(true);*/
-	}
+    public static void questionNumber(StackPane sp, Stage stage,String question,int select) throws Exception {
+    	if (select == 1) {
+        	Label questionNumber = new Label(question);
+        	questionNumber.setTextFill(Color.WHITE);
+        	questionNumber.setStyle("-fx-font: normal 64px 'Arial' ");
+        	sp.getChildren().add(questionNumber);
+        	StackPane.setAlignment(questionNumber, Pos.BOTTOM_RIGHT);
+    	}
+    	else {
+        	Label categoryLabel = new Label(question);
+        	categoryLabel.setTextFill(Color.WHITE);
+        	categoryLabel.setStyle("-fx-font: normal 64px 'Arial' ");
+        	sp.getChildren().add(categoryLabel);
+        	StackPane.setAlignment(categoryLabel, Pos.BOTTOM_LEFT);
+    	}
+    }
 	
 }
 

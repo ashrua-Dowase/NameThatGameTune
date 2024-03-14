@@ -23,7 +23,7 @@ import javafx.scene.layout.*;
 
 
 public class titleScreen {
-	public static String VER_NO = "Version 0.01";
+	public static String VER_NO = "Version 0.10";
 	public MediaPlayer mediaPlayer;
 	public static Integer cursor = 0;
 

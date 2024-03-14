@@ -2,6 +2,7 @@ package nameThatTune.model;
 
 import java.io.File;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 
 import javafx.scene.image.ImageView;
@@ -9,6 +10,7 @@ import javafx.scene.media.AudioClip;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaPlayer.Status;
+import javafx.util.Duration;
 import net.java.games.input.Component;
 import net.java.games.input.Controller;
 import net.java.games.input.ControllerEnvironment;
@@ -46,6 +48,20 @@ public class GamePads extends Thread{
 			}
 		this.setCatString(catString);
 	}
+	public GamePads(String type) {
+		this.setType(type);
+		this.setPick(-1);
+	}
+	public GamePads(String type,Group players) {
+		this.setType(type);
+		this.setPlayers(players);
+		this.getPlayers().getFirst().setChoice(-1);
+		this.getPlayers().getSecond().setChoice(-1);
+		this.getPlayers().getThird().setChoice(-1);
+		this.getPlayers().getFourth().setChoice(-1);
+		this.setDone(false);
+		this.setBuzzed(false);
+	}
 	public GamePads(String type,Group players,MediaPlayer music,ImageView[] selected) {
 		this.setType(type);
 		if (this.getType().equals("game")) {
@@ -58,7 +74,18 @@ public class GamePads extends Thread{
 			this.setBuzzed(false);
 			this.setPlayerBuzzed(new Player("",5));
 			this.setSongToPlay(music);
-			this.getSongToPlay().play();
+			this.getSongToPlay().setOnReady(new Runnable() {
+			    @Override
+			    public void run() {
+			        Random r = new Random((long) Math.random());
+			        Double songLength = getSongToPlay().getMedia().getDuration().toSeconds();
+			        Double halfWay = songLength / 2;
+			        Double seekPoint = r.nextDouble(halfWay);
+			        getSongToPlay().setCycleCount(MediaPlayer.INDEFINITE);
+			    	getSongToPlay().seek(Duration.seconds(seekPoint));
+			    	getSongToPlay().play();
+			    }
+			});
 			this.selected = selected;
 		}
 	}
@@ -216,7 +243,6 @@ public class GamePads extends Thread{
 			}
 		}
 		else if (this.getType().equals("game") && !this.getDone()){
-			this.getSongToPlay().play();
 			while (!this.getDone()) {
 				if(!this.getBuzzed()) {
 					for (int j = 0; j < controllers.length; j++) {
@@ -291,8 +317,137 @@ public class GamePads extends Thread{
 				}
 			}
 		}
+		else if (this.type.equals("setup") && !this.getDone())
+		{
+			while (!this.getDone()) {
+				for (int j = 0; j < controllers.length; j++) {
+					if (controllers[j].getName().equals("Buzz")){
+						controllers[j].poll();			
+						EventQueue queue = controllers[j].getEventQueue();
+						while (queue.getNextEvent(event)) {
+							Component comp = event.getComponent();								
+							if (comp.getName().equals("Button 4")) {
+								//Blue
+								if (!getPlayers().getFirst().getHasBuzzed()) {
+									this.getPlayers().getFirst().setChoice(0);
+									this.getPlayers().getFirst().setHasBuzzed(true);
+								}
+							}
+							else if (comp.getName().equals("Button 3")) {
+								//Orange
+								if (!getPlayers().getFirst().getHasBuzzed()) {
+									this.getPlayers().getFirst().setChoice(1);
+									this.getPlayers().getFirst().setHasBuzzed(true);
+								}
+							}	
+							else if (comp.getName().equals("Button 2")) {
+								//Green
+								if (!getPlayers().getFirst().getHasBuzzed()) {
+									this.getPlayers().getFirst().setChoice(2);
+									this.getPlayers().getFirst().setHasBuzzed(true);
+								}
+							}
+							else if (comp.getName().equals("Button 1")) {
+								//Yella
+								if (!getPlayers().getFirst().getHasBuzzed()) {
+									this.getPlayers().getFirst().setChoice(3);
+									this.getPlayers().getFirst().setHasBuzzed(true);
+								}
+							}
+							else if (comp.getName().equals("Button 6")) {
+								//Yella
+								if (!getPlayers().getSecond().getHasBuzzed()) {
+									this.getPlayers().getSecond().setChoice(3);
+									this.getPlayers().getSecond().setHasBuzzed(true);
+								}
+							}
+							else if (comp.getName().equals("Button 7")) {
+								//Green
+								if (!getPlayers().getSecond().getHasBuzzed()) {
+									this.getPlayers().getSecond().setChoice(2);
+									this.getPlayers().getSecond().setHasBuzzed(true);
+								}
+								}
+							else if (comp.getName().equals("Button 8")) {
+								//Orange
+								if (!getPlayers().getSecond().getHasBuzzed()) {
+									this.getPlayers().getSecond().setChoice(1);
+									this.getPlayers().getSecond().setHasBuzzed(true);
+								}
+								}
+							else if (comp.getName().equals("Button 9")) {
+								//Blue
+								if (!getPlayers().getSecond().getHasBuzzed()) {
+									this.getPlayers().getSecond().setChoice(0);
+									this.getPlayers().getSecond().setHasBuzzed(true);
+								}
+							}
+							else if (comp.getName().contains("11")) {
+								//Yellow
+								if (!getPlayers().getThird().getHasBuzzed()) {
+									this.getPlayers().getThird().setChoice(3);
+									this.getPlayers().getThird().setHasBuzzed(true);
+								}
+							}
+							else if (comp.getName().contains("12")) {
+								//Green
+								if (!getPlayers().getThird().getHasBuzzed()) {
+									this.getPlayers().getThird().setChoice(2);
+									this.getPlayers().getThird().setHasBuzzed(true);
+								}
+							}
+							else if (comp.getName().contains("13")) {
+								//Orange
+								if (!getPlayers().getThird().getHasBuzzed()) {
+									this.getPlayers().getThird().setChoice(1);
+									this.getPlayers().getThird().setHasBuzzed(true);
+								}
+							}
+							else if (comp.getName().contains("14")) {
+								//Blue
+								if (!getPlayers().getThird().getHasBuzzed()) {
+									this.getPlayers().getThird().setChoice(0);
+									this.getPlayers().getThird().setHasBuzzed(true);
+								}
+							}
+							else if (comp.getName().contains("16")) {
+							//Blue
+								if (!getPlayers().getFourth().getHasBuzzed()) {
+									this.getPlayers().getFourth().setChoice(3);
+									this.getPlayers().getFourth().setHasBuzzed(true);
+								}
+							}
+							else if (comp.getName().contains("17")) {
+								//Orange
+								if (!getPlayers().getFourth().getHasBuzzed()) {
+									this.getPlayers().getFourth().setChoice(2);
+									this.getPlayers().getFourth().setHasBuzzed(true);
+								}
+							}
+							else if (comp.getName().contains("18")) {
+								//Green
+								if (!getPlayers().getFourth().getHasBuzzed()) {
+									this.getPlayers().getFourth().setChoice(1);
+									this.getPlayers().getFourth().setHasBuzzed(true);
+								}
+							}
+							else if (comp.getName().contains("19")) {
+								//Blue
+								if (!getPlayers().getFourth().getHasBuzzed()) {
+									this.getPlayers().getFourth().setChoice(0);
+									this.getPlayers().getFourth().setHasBuzzed(true);
+								}
+							}
+							if (players.getFirst().gethasBuzzed() && players.getSecond().gethasBuzzed() && players.getThird().gethasBuzzed() && players.getFourth().gethasBuzzed()) {
+								this.setDone(true);
+							}
+						}
+					}
+				}
+			}
+		}
 		else {
-			while (this.getType()!="game" || this.getType()!="main") {
+			while (true) {
 				try {
 					Thread.sleep(10);
 				} catch (InterruptedException e) {
