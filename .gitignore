@@ -1,0 +1,7 @@
+resources/**
+bin/**
+.settings/**
+src/main/resources/categories/**
+categories/**
+target/**
+natives/**
